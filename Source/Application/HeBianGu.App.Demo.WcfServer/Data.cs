@@ -52,6 +52,12 @@ namespace HeBianGu.App.Demo.WcfServer
         }
     }
 
-    
 
+    //class DataAsync : IDataAsync
+    //{
+    //    public IAsyncResult DoAsync()
+    //    {
+            
+    //    }
+    //}
 }

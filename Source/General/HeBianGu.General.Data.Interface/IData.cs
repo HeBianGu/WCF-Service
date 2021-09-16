@@ -21,7 +21,14 @@ namespace HeBianGu.General.Data.Interface
         CallResult<TestModel> GetTestModelByID(string id);
 
         [OperationContract]
-        CallResult DeleteTestModelByID(string id);
+        CallResult DeleteTestModelByID(string id); 
+    }
 
+
+    [ServiceContract]
+    public interface IDataAsync
+    {
+        [OperationContract(AsyncPattern =true)]
+        IAsyncResult DoAsync(AsyncCallback callback); 
     }
 }

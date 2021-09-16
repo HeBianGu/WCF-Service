@@ -18,13 +18,6 @@ namespace HeBianGu.App.Demo.WcfClient
 
             IClientService service = new TcpService("127.0.0.1", "7777");
 
-            //IServerService service = new TcpService("127.0.0.1", "7777");
-
-            //IServerService service = new MsmqService();
-
-            //service.Do<IData>(l => l.Do());
-
-            //ContractClient contract = new ContractClient(callBack);
 
             //Task.Run(() =>
             //{
@@ -32,11 +25,7 @@ namespace HeBianGu.App.Demo.WcfClient
             //    {
             //        Thread.Sleep(10);
 
-            //        //service.Do<IData>(l => l.Do());
-
-            //        IMessageCallBack callBack = new MessageCallBack();
-
-            //        callBack.CallBack += l => Console.WriteLine("CallBack:" + DateTime.Now);
+            //        //service.Do<IData>(l => l.Do()); 
 
             //        var result = service.DuplexCall<IMyContract, CallResult, IMessageCallBack>(l => l.Do(), callBack);
 
@@ -45,40 +34,9 @@ namespace HeBianGu.App.Demo.WcfClient
             //    }
             //});
 
-            //IActionResult result= service.Do<IData>(l => l.GetResult());
-
-            // if(result!=null)
-            // {
-            //     Console.WriteLine(result.Code);
-            //     Console.WriteLine(result.Message);
-            // }
 
 
-            Console.WriteLine("当前线程ID:"+Thread.CurrentThread.ManagedThreadId);
-
-            Action action =async () =>
-             {
-                 Console.WriteLine("当前线程ID:" + Thread.CurrentThread.ManagedThreadId);
-
-                 while (true)
-                 {
-
-                     var result = await service.CallAsync<IData, CallResult<TestModel>>(l => l.GetTestModelByID("111"));
-
-                     Console.WriteLine("当前线程ID:" + Thread.CurrentThread.ManagedThreadId);
-
-                     if (result != null)
-                     {
-                         Console.WriteLine(result.Code);
-                         Console.WriteLine(result.Message);
-                         Console.WriteLine(result.Data?.ToString());
-                         Console.WriteLine(result.Data?.Name);
-                     }
-
-                     Thread.Sleep(500);
-                 }
-             };
-
+            //  Do ：说明
             //Task.Run(async()=>
             //{
             //    while(true)
@@ -115,8 +73,58 @@ namespace HeBianGu.App.Demo.WcfClient
             //    Console.WriteLine(result.Code);
             //    Console.WriteLine(result.Message);
             //}
+
+            CallBackTest(service);
+
             Console.Read();
 
+        }
+
+
+        /// <summary> 回掉函数应用示例 </summary>
+        static void CallBackTest(IClientService service)
+        { 
+            //  Do ：回掉函数
+
+            IMessageCallBack callBack = new MessageCallBack();
+
+            //ContractClient contract = new ContractClient(callBack);
+
+            callBack.CallBack += l => Console.WriteLine(DateTime.Now + " - CallBack:" + l);
+
+            var result = service.DuplexCall<IMyContract, CallResult, IMessageCallBack>(l => l.Do(), callBack);
+
+            Console.WriteLine(result?.Code);
+            Console.WriteLine(result?.Message);
+        }
+
+        /// <summary> 请求响应模式 </summary>
+        static void Call(IClientService service)
+        {
+            Action action = async () =>
+              {
+                  Console.WriteLine("当前线程ID:" + Thread.CurrentThread.ManagedThreadId);
+
+                  while (true)
+                  {
+
+                      var result = await service.CallAsync<IData, CallResult<TestModel>>(l => l.GetTestModelByID("111"));
+
+                      Console.WriteLine("当前线程ID:" + Thread.CurrentThread.ManagedThreadId);
+
+                      if (result != null)
+                      {
+                          Console.WriteLine(result.Code);
+                          Console.WriteLine(result.Message);
+                          Console.WriteLine(result.Data?.ToString());
+                          Console.WriteLine(result.Data?.Name);
+                      }
+
+                      Thread.Sleep(500);
+                  }
+              };
+
+            action.Invoke();
         }
     }
 

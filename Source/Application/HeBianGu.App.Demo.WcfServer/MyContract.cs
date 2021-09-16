@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HeBianGu.App.Demo.WcfServer
@@ -19,10 +20,17 @@ namespace HeBianGu.App.Demo.WcfServer
 
             callBack.OnCallbackMessage("开始运行");
 
-           callBack.OnCallback();
+           callBack.OnCallback(); 
+
+            for (int i = 0; i < 100; i++)
+            {
+                callBack.OnCallbackMessage($"{i}/100");
+
+                Thread.Sleep(50);
+            }
+
 
             callBack.OnCallbackMessage("运行结束");
-
 
             return CallResult.Ok();
 

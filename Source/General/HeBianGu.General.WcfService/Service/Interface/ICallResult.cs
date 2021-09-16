@@ -12,7 +12,7 @@ namespace HeBianGu.General.WcfService
     public class CallResult : CallResult<string>
     {
         public static CallResult Ok(string message= "运行完成")
-        {
+        { 
             return new CallResult() { Code = true, Message = message };
         }
 
@@ -44,4 +44,5 @@ namespace HeBianGu.General.WcfService
 
     }
     
+ 
 }

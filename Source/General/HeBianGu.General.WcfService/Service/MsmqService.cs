@@ -14,6 +14,19 @@ namespace HeBianGu.General.WcfService
 
         string _serverFormat = "net.msmq://localHost/{0}";
 
+        public override void Register<I>(object instance)
+        {
+            this.Register<I, NetTcpBinding>(new Uri(_format), instance, l =>
+            {
+                l.MaxBufferPoolSize = int.MaxValue;
+                l.MaxReceivedMessageSize = int.MaxValue;
+                l.ReceiveTimeout = new TimeSpan(1, 0, 0);
+                l.OpenTimeout = new TimeSpan(0, 5, 0);
+                l.CloseTimeout = new TimeSpan(0, 5, 0);
+                l.SendTimeout = new TimeSpan(0, 5, 0);
+            });
+        }
+
         public override void Register<I, T>() 
         {
             this.Register<I, T, NetMsmqBinding>(new Uri(_format), l =>

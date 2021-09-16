@@ -19,6 +19,19 @@ namespace HeBianGu.General.WcfService
 
         }
 
+        public override void Register<I>(object instance)
+        {
+            this.Register<I, NetTcpBinding>(new Uri(string.Format(_hostFormat, _ip, _port)), instance, l =>
+            {
+                l.MaxBufferPoolSize = int.MaxValue;
+                l.MaxReceivedMessageSize = int.MaxValue;
+                l.ReceiveTimeout = new TimeSpan(1, 0, 0);
+                l.OpenTimeout = new TimeSpan(0, 5, 0);
+                l.CloseTimeout = new TimeSpan(0, 5, 0);
+                l.SendTimeout = new TimeSpan(0, 5, 0);
+            });
+        }
+
         public override void Register<I, T>()
         {
             this.Register<I, T, NetTcpBinding>(new Uri(string.Format(_hostFormat, _ip, _port)), l =>

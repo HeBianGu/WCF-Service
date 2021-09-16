@@ -9,7 +9,17 @@ using System.Threading.Tasks;
 namespace HeBianGu.General.WcfService
 {
     public abstract class ServiceBase<B> : ServiceBase, IServerService, IClientService where B : Binding
-    {
+    { 
+        public virtual void Register<I>(object instance)
+        {
+            this.Register<I, B>(this.GetHostUri(), instance, l =>
+            {
+                l.ReceiveTimeout = new TimeSpan(1, 0, 0);
+                l.OpenTimeout = new TimeSpan(0, 5, 0);
+                l.CloseTimeout = new TimeSpan(0, 5, 0);
+                l.SendTimeout = new TimeSpan(0, 5, 0);
+            });
+        }
 
         public virtual void Register<I, T>() where T : class
         {
